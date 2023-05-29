@@ -11,8 +11,7 @@
     <el-container class="content">
       <!-- 侧边菜单 -->
       <el-aside class="aside">
-        <el-menu router class="el-menu-vertical-demo" default-active="index" :collapse="isCollapse" @open="handleOpen"
-          @close="handleClose">
+        <el-menu router class="el-menu-vertical-demo" :collapse="isCollapse">
           <template v-for="link in links">
             <template v-if="link.subs">
               <el-sub-menu :index="link.index" :key="link.id">
@@ -42,18 +41,11 @@
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import { ref } from 'vue'
-import { Document, Menu as IconMenu, Location, Setting, Cellphone } from '@element-plus/icons-vue'
+import { Setting, Cellphone } from '@element-plus/icons-vue'
 import router from '../router';
 
-const isCollapse = ref(false)
-const handleOpen = (key, keyPath) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key, keyPath) => {
-  console.log(key, keyPath)
-}
 const links = ref([
   {
     id: 'index',

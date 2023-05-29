@@ -249,7 +249,6 @@ function submit() {
                 }
             }
 
-
             button {
                 width: 400px;
                 height: 50px;

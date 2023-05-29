@@ -18,50 +18,76 @@
                 <el-form-item>
                     <el-button type="primary" @click="getUser">查询</el-button>
                 </el-form-item>
+                <el-form-item>
+                    <el-button type="warning" @click="getAll">重置</el-button>
+                </el-form-item>
             </el-form>
         </div>
         <div class="add">
-            <el-button type="primary" @click="addUserFormOpen = true">新增员工</el-button>
+            <el-button type="primary" @click="openAndReset">新增员工</el-button>
         </div>
-        <el-dialog v-model="addUserFormOpen" title="新增员工" width="300px" center>
-            <el-form :model="formAddUser">
+        <el-dialog v-model="addUserOpen" title="新增员工" width="300px" center>
+            <el-form :model="formAdd">
                 <el-form-item label="工号" :label-width="formLabelWidth">
-                    <el-input v-model="formAddUser.id" autocomplete="off" />
+                    <el-input v-model="formAdd.id" autocomplete="off" />
                 </el-form-item>
                 <el-form-item label="姓名" :label-width="formLabelWidth">
-                    <el-input v-model="formAddUser.name" autocomplete="off" />
+                    <el-input v-model="formAdd.name" autocomplete="off" />
                 </el-form-item>
                 <el-form-item label="年龄" :label-width="formLabelWidth">
-                    <el-input v-model="formAddUser.age" autocomplete="off" />
+                    <el-input v-model="formAdd.age" autocomplete="off" />
                 </el-form-item>
                 <el-form-item label="性别" :label-width="formLabelWidth">
-                    <el-input v-model="formAddUser.gender" autocomplete="off" />
+                    <el-input v-model="formAdd.gender" autocomplete="off" />
                 </el-form-item>
                 <el-form-item label="电话" :label-width="formLabelWidth">
-                    <el-input v-model="formAddUser.tel" autocomplete="off" />
-                </el-form-item>
-                <el-form-item label="地址" :label-width="formLabelWidth">
-                    <el-input v-model="formAddUser.address" autocomplete="off" />
+                    <el-input v-model="formAdd.tel" autocomplete="off" />
                 </el-form-item>
             </el-form>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="addUserFormOpen = false">取消</el-button>
+                    <el-button @click=" addUserOpen = false">取消</el-button>
                     <el-button type="primary" @click="addUser">
                         确定
                     </el-button>
                 </span>
             </template>
         </el-dialog>
+        <el-dialog v-model="updateUserOpen" title="编辑信息" width="300px" center>
+            <el-form :model="formUpdate">
+                <el-form-item label="工号" :label-width="formLabelWidth">
+                    <el-input v-model="formUpdate.id" autocomplete="off" disabled />
+                </el-form-item>
+                <el-form-item label="姓名" :label-width="formLabelWidth">
+                    <el-input v-model="formUpdate.name" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="年龄" :label-width="formLabelWidth">
+                    <el-input v-model="formUpdate.age" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="性别" :label-width="formLabelWidth">
+                    <el-input v-model="formUpdate.gender" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="电话" :label-width="formLabelWidth">
+                    <el-input v-model="formUpdate.tel" autocomplete="off" />
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click=" updateUserOpen = false">取消</el-button>
+                    <el-button type="primary" @click="updateUser">
+                        确定
+                    </el-button>
+                </span>
+            </template>
+        </el-dialog>
         <div class="table">
-            <el-table :data="UserTable" style="width: 100%" border stripe>
-                <el-table-column label="工号" prop="id" />
+            <el-table :data="UserTable" style="width: 100%" stripe border>
+                <el-table-column label="工号" prop="id" width="150px" />
                 <el-table-column label="姓名" prop="name" />
-                <el-table-column label="年龄" prop="age" />
-                <el-table-column label="性别" prop="gender" />
-                <el-table-column label="电话" prop="tel" />
-                <el-table-column label="地址" prop="address" />
-                <el-table-column align="center" label="编辑">
+                <el-table-column label="年龄" prop="age" width="150px" />
+                <el-table-column label="性别" prop="gender" width="150px" />
+                <el-table-column label="电话" prop="tel" min-width="150px" />
+                <el-table-column align="center" label="编辑" min-width="200px">
                     <template #default="scope">
                         <el-button @click="handleEdit(scope.$index, scope.row)">编 辑</el-button>
                         <el-button type="danger" @click="handleDelete(scope.$index, scope.row)">删 除</el-button>
@@ -73,10 +99,12 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import axios from 'axios'
-import { reactive } from 'vue'
-const addUserFormOpen = ref(false)
+import qs from 'qs';
+
+const addUserOpen = ref(false)
+const updateUserOpen = ref(false)
 
 const formInline = reactive({
     id: '',
@@ -85,21 +113,19 @@ const formInline = reactive({
     tel: ''
 })
 const formLabelWidth = '50px'
-const formAddUser = reactive({
+let formAdd = reactive({
     id: '',
     name: '',
     age: '',
     gender: '',
-    tel: '',
-    address: ''
+    tel: ''
 })
-const formUpdateUser = reactive({
+let formUpdate = reactive({
     id: '',
     name: '',
     age: '',
     gender: '',
-    tel: '',
-    address: ''
+    tel: ''
 })
 
 onMounted(() => {
@@ -109,6 +135,16 @@ onMounted(() => {
         }
     )
 })
+const openAndReset = () => {
+    addUserOpen.value = true
+    formAdd = reactive({
+        id: '',
+        name: '',
+        age: '',
+        gender: '',
+        tel: ''
+    })
+}
 const getAll = () => {
     axios.get('/api/user/all').then(
         function (response) {
@@ -117,37 +153,41 @@ const getAll = () => {
     )
 }
 const getUser = () => {
-    axios.get('/api/user', {
+    axios.get('/api/user/id', {
         params: {
             id: formInline.id
         }
     }).then(
         function (response) {
-            console.log(response.data.status)
+            UserTable.value = response.data;
         }
     )
 }
 const addUser = () => {
-    axios.post('/api/user/add', {
-        id: formAddUser.id,
-        name: formAddUser.name,
-        age: formAddUser.age,
-        gender: formAddUser.gender,
-        tel: formAddUser.tel,
-        address: formAddUser.address
-    }).then(
+    addUserOpen.value = false
+
+    const data = reactive({
+        id: formAdd.id,
+        name: formAdd.name,
+        age: formAdd.age,
+        gender: formAdd.gender,
+        tel: formAdd.tel
+    })
+    axios.post('/api/user/add', qs.stringify(data)).then(
         function (response) {
             getAll()
         }
     )
-    // addUserFormOpen.value = false
+
 }
 const updateUser = () => {
+    updateUserOpen.value = false
     axios.put('/api/user/update', {
-        id: formInline.id,
-        name: formInline.name,
-        age: formInline.age,
-        tel: formInline.tel
+        id: formUpdate.id,
+        name: formUpdate.name,
+        age: formUpdate.age,
+        gender: formUpdate.gender,
+        tel: formUpdate.tel
     }).then(
         function (response) {
             getAll()
@@ -155,28 +195,35 @@ const updateUser = () => {
     )
 }
 const deleteUser = () => {
-    axios.delete('/api/user', {
-        id: formInline.id,
+
+}
+const handleEdit = (index, row) => {
+    updateUserOpen.value = true
+    formUpdate.id = row.id;
+    formUpdate.name = row.name;
+    formUpdate.age = row.age;
+    formUpdate.gender = row.gender;
+    formUpdate.tel = row.tel;
+}
+const handleDelete = (index, row) => {
+    axios.delete('/api/user/id', {
+        params: {
+            id: row.id
+        }
     }).then(
         function (response) {
             getAll()
         }
     )
 }
-const handleEdit = (index, row) => {
-    console.log(row.id, row.name, index)
-}
-const handleDelete = (index, row) => {
-    console.log(row.id, row.name, index)
-}
 const UserTable = ref([
-    // {
-    //     id: 1001,
-    //     name: 'Tom',
-    //     age: 18,
-    //     tel: 13012259556,
-    //     address: '河南省洛阳市'
-    // }
+    {
+        id: 1001,
+        name: 'Tom',
+        age: 18,
+        gender: "男",
+        tel: 13012259556
+    }
 ])
 </script>
 <style>
