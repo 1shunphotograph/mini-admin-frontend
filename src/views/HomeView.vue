@@ -46,6 +46,7 @@ import { ref } from 'vue'
 import { Setting, Cellphone } from '@element-plus/icons-vue'
 import router from '../router';
 
+const isCollapse = ref(false)
 const links = ref([
   {
     id: 'index',

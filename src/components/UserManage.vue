@@ -2,18 +2,12 @@
     <div class="usermanage">
 
         <div class="form">
-            <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form :inline="true" :model="formSearch" class="demo-form-inline">
                 <el-form-item label="工号">
-                    <el-input v-model="formInline.id" placeholder="工号" />
+                    <el-input v-model="formSearch.id" placeholder="工号" />
                 </el-form-item>
                 <el-form-item label="姓名">
-                    <el-input v-model="formInline.name" placeholder="姓名" />
-                </el-form-item>
-                <el-form-item label="年龄">
-                    <el-input v-model="formInline.age" placeholder="年龄" />
-                </el-form-item>
-                <el-form-item label="电话">
-                    <el-input v-model="formInline.tel" placeholder="电话" />
+                    <el-input v-model="formSearch.name" placeholder="姓名" />
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="getUser">查询</el-button>
@@ -106,7 +100,7 @@ import qs from 'qs';
 const addUserOpen = ref(false)
 const updateUserOpen = ref(false)
 
-const formInline = reactive({
+const formSearch = reactive({
     id: '',
     name: '',
     age: '',
@@ -155,7 +149,7 @@ const getAll = () => {
 const getUser = () => {
     axios.get('/api/user/id', {
         params: {
-            id: formInline.id
+            id: formSearch.id
         }
     }).then(
         function (response) {
