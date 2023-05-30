@@ -3,12 +3,15 @@
 
         <div class="form">
             <el-form :inline="true" :model="formSearch" class="demo-form-inline">
+                <el-form-item>
+                    <el-button type="primary" @click="openAndReset">新增员工</el-button>
+                </el-form-item>
                 <el-form-item label="工号">
                     <el-input v-model="formSearch.id" placeholder="工号" />
                 </el-form-item>
-                <el-form-item label="姓名">
+                <!-- <el-form-item label="姓名">
                     <el-input v-model="formSearch.name" placeholder="姓名" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item>
                     <el-button type="primary" @click="getUser">查询</el-button>
                 </el-form-item>
@@ -17,9 +20,9 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div class="add">
+        <!-- <div class="add">
             <el-button type="primary" @click="openAndReset">新增员工</el-button>
-        </div>
+        </div> -->
         <el-dialog v-model="addUserOpen" title="新增员工" width="300px" center>
             <el-form :model="formAdd">
                 <el-form-item label="工号" :label-width="formLabelWidth">
