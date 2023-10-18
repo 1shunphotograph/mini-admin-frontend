@@ -259,6 +259,22 @@ function submit() {
                 border: none;
                 border-radius: 25px;
                 background: linear-gradient(45deg, #2196f3 30%, #21cbf3 90%);
+                box-shadow: 0 0 10px rgb(100, 222, 252);
+                animation: glowing 2s ease-in-out infinite;
+            }
+
+            @keyframes glowing {
+                0% {
+                    box-shadow: 0 0 10px rgb(91, 210, 253);
+                }
+
+                50% {
+                    box-shadow: 0 0 10px rgba(150, 224, 255, 0.844), 0 0 20px rgba(128, 202, 255, 0.787);
+                }
+
+                100% {
+                    box-shadow: 0 0 10px rgb(91, 210, 253);
+                }
             }
         }
     }
